@@ -1,7 +1,11 @@
 import requests
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 def send(Message):
-    token = '7846183880:AAGRBet7B2rYs3T79lzIoKsYXG54gNSEcMo'
+    token = os.getenv("tele_bot_token")
     chat_id = '5825923030'
     message = Message
     url = f'https://api.telegram.org/bot{token}/sendMessage'
