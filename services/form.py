@@ -2,6 +2,7 @@ import requests
 import json
 from services.data_utils import extract_field
 from datetime import datetime
+from services.bot import send
 
 
 def form_service(timestamp, caseID, content):
@@ -35,6 +36,9 @@ def form_service(timestamp, caseID, content):
 
     response = requests.post(url, headers=headers, json=data)
     print(f"Status Code: {response.status_code}")
+    if response.status_code != 201:
+        send("Automation Error - Form not created successfully, URL Form maybe expired, or request data maybe broken")
+
     # print(f"Response Body:\n{response.text}")
 
 def make_data(data):
@@ -46,3 +50,5 @@ def make_data(data):
         else:
             case_id = extract_field("Case ID", row["message"])
             form_service(row["timestamp"], case_id ,row["message"])
+
+# form_service("231","213","wadawd")

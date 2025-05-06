@@ -5,6 +5,7 @@ import json
 from dotenv import load_dotenv
 from services.form import make_data
 import requests
+from services.bot import send
 import os
 
 load_dotenv()
@@ -51,15 +52,18 @@ class WhatsAppReader:
         return messages
 
     def run(self):
+        message_trigger = 0
         try:
             while True:
                 try:
+                    print(f"waiting new message from grup {self.target_group}....")
                     selector = f'//div[@class="x1n2onr6"][.//span[@title="{self.target_group}"]]//div[@class="_ahlk"]'
                     self.page.wait_for_selector(selector, timeout=60000)
                     unread_div = self.page.query_selector(selector)
                     time.sleep(0.5)
 
                     if unread_div:
+                        message_trigger = 0
                         group_selector = f'//div[@class="x1n2onr6"]//span[@title="{self.target_group}"]'
                         self.page.click(group_selector)
                         count = int(unread_div.inner_text())
@@ -77,8 +81,14 @@ class WhatsAppReader:
                         print("❌ Tidak ditemukan unread message")
 
                 except Exception as e:
-                    print(f"❌ Gagal menemukan grup '{self.target_group}': {e}")
-                    time.sleep(5)
+                    message_trigger += 1
+                    print(f"masuk ke except : {message_trigger}")
+                    if message_trigger >= 140:
+                        send(f"Playwright Erorr, cannot click target group / There's no message in last 30 minutes {e}")
+                        time.sleep(5)
+                    else:
+                        print(f"Tidak ditemukan adanya unread message pada {self.target_group} mencoba lagi dalam 10 detik")
+                        time.sleep(5)
 
                 time.sleep(5)
         except KeyboardInterrupt:
