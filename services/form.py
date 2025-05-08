@@ -3,7 +3,7 @@ import json
 from services.data_utils import extract_field
 from datetime import datetime
 from services.bot import send
-
+import time
 
 def form_service(timestamp, caseID, content):
     url = "https://forms.office.com/formapi/api/fdd345f9-103a-4dcf-8685-4bde04046f0c/users/b31f33e5-90e3-412a-a263-5ff4f3484a45/forms('-UXT_ToQz02GhUveBARvDOUzH7PjkCpBomNf9PNISkVUNUg0TEUwUDFDN1ZMNThDMlNHTjNMMVVZMC4u')/responses"
@@ -50,5 +50,6 @@ def make_data(data):
         else:
             case_id = extract_field("Case ID", row["message"])
             form_service(row["timestamp"], case_id ,row["message"])
+        time.sleep(3)
 
 # form_service("231","213","wadawd")
