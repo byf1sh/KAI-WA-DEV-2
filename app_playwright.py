@@ -66,6 +66,7 @@ class WhatsAppReader:
                         message_trigger = 0
                         group_selector = f'//div[@class="x1n2onr6"]//span[@title="{self.target_group}"]'
                         self.page.click(group_selector)
+                        time.sleep(3)
                         count = int(unread_div.inner_text())
                         self.button_presser(count)
                         message_data = self.get_unread_messages(count)
